@@ -22,16 +22,19 @@ public class SimpleThreadPool {
    private Thread[] workerThreads;
 
 
+   // constructor with a default of 3 threads
    public SimpleThreadPool() {
       this.taskQueue = new LinkedBlockingQueue<ISimpleTask>();
       this.workerThreads = new Thread[3]; // by default we create 3 threads to do the work for us
    }
 
+   // constructor with the possibility to specify the number of threads
    public SimpleThreadPool(int nThreads) {
       this.taskQueue = new LinkedBlockingQueue<ISimpleTask>();
       this.workerThreads = new Thread[nThreads];
    }
 
+   // this methods starts all threads which call run() in the process
 	public void start() {
       // start all threads
       for(int i = 0; i < this.workerThreads.length; i++) {
@@ -43,7 +46,7 @@ public class SimpleThreadPool {
    }
 	
 	/**
-	 *   #1. Stops everything
+	 *   #1. Stops everything after trying to finish the tasks
 	 */
 	public void stop() {
       // try to finish tasks in queue
@@ -51,7 +54,8 @@ public class SimpleThreadPool {
          try{
             Thread.sleep(10);
          } catch (InterruptedException e) {
-            break;
+            // reset the interrupt status
+            Thread.currentThread().interrupt();
          }
       }
       for (Thread workerThread : workerThreads) {
@@ -62,6 +66,7 @@ public class SimpleThreadPool {
 	
 	/**
 	 *   #1. Add a task to your queue.
+    *   The LinkedBlockedQueue is threadsafe by default
 	 */
 	public void addTask(ISimpleTask task) {
       try {

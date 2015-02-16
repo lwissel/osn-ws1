@@ -12,10 +12,12 @@ public class SimplePoolThread implements ISimplePoolThread {
    private boolean isStopped = false;
    private String name = "Thread ";
 
+   // default constructor
    public SimplePoolThread(LinkedBlockingQueue<ISimpleTask> taskQueue) {
       this.taskQueue = taskQueue;
    }
 
+   // constructor with possibility to add a thread id
    public SimplePoolThread(LinkedBlockingQueue<ISimpleTask> taskQueue, int n) {
       this.taskQueue = taskQueue;
       this.name = name + n;
