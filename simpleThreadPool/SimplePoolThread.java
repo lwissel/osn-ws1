@@ -8,11 +8,11 @@ package simpleThreadPool;
 import java.util.concurrent.*;
 
 public class SimplePoolThread implements ISimplePoolThread {
-   private LinkedBlockingQueue lbq;
+   private LinkedBlockingQueue<ISimpleTask> taskQueue;
    private boolean isStopped = false;
 
-   public SimplePoolThread(LinkedBlockingQueue lbq) {
-      this.lbq = lbq;
+   public SimplePoolThread(LinkedBlockingQueue<ISimpleTask> taskQueue) {
+      this.taskQueue = taskQueue;
    }
 
    @Override
@@ -22,7 +22,8 @@ public class SimplePoolThread implements ISimplePoolThread {
        */
       while(!isStopped) {
          try {
-           lbq.take().run(); 
+           ISimpleTask task = taskQueue.take(); 
+           task.run();
          }
          catch (InterruptedException e) {
             isStopped = true;
