@@ -10,9 +10,19 @@ import java.util.concurrent.*;
 public class SimplePoolThread implements ISimplePoolThread {
    private LinkedBlockingQueue<ISimpleTask> taskQueue;
    private boolean isStopped = false;
+   private String name = "Thread ";
 
    public SimplePoolThread(LinkedBlockingQueue<ISimpleTask> taskQueue) {
       this.taskQueue = taskQueue;
+   }
+
+   public SimplePoolThread(LinkedBlockingQueue<ISimpleTask> taskQueue, int n) {
+      this.taskQueue = taskQueue;
+      this.name = name + n;
+   }
+
+   public String getName() {
+      return this.name;
    }
 
    @Override

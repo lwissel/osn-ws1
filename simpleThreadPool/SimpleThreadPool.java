@@ -24,7 +24,7 @@ public class SimpleThreadPool {
 
    public SimpleThreadPool() {
       this.taskQueue = new LinkedBlockingQueue<ISimpleTask>();
-      this.workerThreads = new Thread[2];
+      this.workerThreads = new Thread[3]; // by default we create 3 threads to do the work for us
    }
 
    public SimpleThreadPool(int nThreads) {
@@ -35,8 +35,9 @@ public class SimpleThreadPool {
 	public void start() {
       // start all threads
       for(int i = 0; i < this.workerThreads.length; i++) {
-         SimplePoolThread spThread = new SimplePoolThread(taskQueue);
+         SimplePoolThread spThread = new SimplePoolThread(taskQueue, i);
          workerThreads[i] = new Thread(spThread);
+         System.out.println(spThread.getName() + " started");
          workerThreads[i].start();
       }
    }
@@ -45,8 +46,17 @@ public class SimpleThreadPool {
 	 *   #1. Stops everything
 	 */
 	public void stop() {
+      // try to finish tasks in queue
+      while(!taskQueue.isEmpty()) {
+         try{
+            Thread.sleep(10);
+         } catch (InterruptedException e) {
+            break;
+         }
+      }
       for (Thread workerThread : workerThreads) {
          workerThread.interrupt();
+         System.out.println(workerThread.getName() + " has been interrupted");
       }
    }
 	
